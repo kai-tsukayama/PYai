@@ -6,6 +6,8 @@ response_area = None
 lb = None
 action = None
 pyai = Pyai("pyai")
+on_canvas=None
+pysaru_images=[]
 
 
 def putlog(str):
@@ -17,6 +19,25 @@ def prompt():
     if (action.get()) == 0:
         p += ":"+ pyai.responder.name
         return p+">"
+
+def chagImg(img):
+    canvas.itemconfig(
+        on_canvas,
+        image=pysaru_images[img]
+    )
+
+def change_looks():
+    em=pyai.emotion.mood
+    if -5<=em<=5:
+        chagImg(0)
+    elif -10<=em<=-5:
+        chagImg(1)
+    elif -15<=em<=-10:
+        chagImg(2)
+    elif 5<=em<=10:
+        chagImg(4)
+    elif 10<=em<=15:
+        chagImg(3)
 
 
 def talk():
@@ -30,11 +51,13 @@ def talk():
         putlog(prompt()+response)
         entry.delete(0, tk.END)
 
+    change_looks()    
+
 # ここから画面の設定
 
 
 def run():
-    global entry, response_area, lb, action
+    global entry, response_area, lb, action,canvas,on_canvas,pysaru_images
 
     root = tk.Tk()
     root.geometry("880x560")
@@ -72,11 +95,16 @@ def run():
             )
     canvas.place(x=370, y=0)
 
-    img = tk.PhotoImage(file="non.gif")
-    canvas.create_image(
+    pysaru_images.append(tk.PhotoImage(file="nomal.gif"))
+    pysaru_images.append(tk.PhotoImage(file="non.gif"))
+    pysaru_images.append(tk.PhotoImage(file="oko.gif"))
+    pysaru_images.append(tk.PhotoImage(file="tere.gif"))
+    pysaru_images.append(tk.PhotoImage(file="wara.gif"))
+
+    on_canvas=canvas.create_image(
         0,
         0,
-        image=img,
+        image=pysaru_images[0],
         anchor=tk.NW
     )
     # 応答エリアの作成
